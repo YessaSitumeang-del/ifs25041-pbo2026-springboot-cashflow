@@ -1,0 +1,5 @@
+# Spring XsltView (RCE) dan SSE dengan view fragment tidak dipakai di aplikasi ini.
+# Perbaikan hanya ada di Spring Framework 7.0.9+ (butuh Spring Boot 4 + Vaadin 25).
+# Tinjau ulang saat migrasi ke Boot 4.
+CVE-2026-47884
+CVE-2026-47890
