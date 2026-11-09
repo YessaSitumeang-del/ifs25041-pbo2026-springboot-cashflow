@@ -51,7 +51,7 @@ public final class DotEnv {
             return Optional.empty();
         }
         // Notepad di Windows dapat menyimpan BOM di awal berkas.
-        String line = rawLine.replace("﻿", "").trim();
+        String line = rawLine.replace("\uFEFF", "").trim();
         if (line.isEmpty() || line.startsWith("#")) {
             return Optional.empty();
         }
@@ -62,10 +62,8 @@ public final class DotEnv {
         if (separator <= 0) {
             return Optional.empty();
         }
+        // separator > 0 dan baris sudah di-trim, sehingga kunci pasti tidak kosong.
         String key = line.substring(0, separator).trim();
-        if (key.isEmpty()) {
-            return Optional.empty();
-        }
         String value = cleanValue(line.substring(separator + 1).trim());
         return Optional.of(new AbstractMap.SimpleImmutableEntry<>(key, value));
     }
