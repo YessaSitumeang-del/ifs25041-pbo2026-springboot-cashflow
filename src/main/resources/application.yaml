@@ -1,0 +1,6 @@
+server:
+  port: ${APP_PORT:8080}
+
+spring:
+  application:
+    name: ifs25041-pbo2026-springboot-cashflow
