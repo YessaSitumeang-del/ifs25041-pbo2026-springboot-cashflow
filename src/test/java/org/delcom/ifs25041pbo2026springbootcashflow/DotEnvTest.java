@@ -1,5 +1,6 @@
 package org.delcom.ifs25041pbo2026springbootcashflow;
 
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -69,6 +70,34 @@ class DotEnvTest {
         } finally {
             System.clearProperty(fresh);
             System.clearProperty(existing);
+            Files.deleteIfExists(file);
+        }
+    }
+
+    @Test
+    void keepsMismatchedQuotesAsIs() {
+        assertParsed("NAME", "\"abc", "NAME=\"abc");
+        assertParsed("NAME", "'abc\"", "NAME='abc\"");
+        assertParsed("NAME", "\"", "NAME=\"");
+    }
+
+    @Test
+    void loadDoesNotOverrideRealEnvironmentVariables() throws IOException {
+        String key = System.getenv().keySet().stream()
+                .filter(k -> k.matches("[A-Za-z_][A-Za-z0-9_]*"))
+                .findFirst()
+                .orElse(null);
+        Assumptions.assumeTrue(key != null, "tidak ada environment variable yang bisa dipakai");
+
+        String before = System.getProperty(key);
+        Path file = Files.createTempFile("cashflow", ".env");
+        try {
+            Files.writeString(file, key + "=dari-berkas\n", StandardCharsets.UTF_8);
+
+            DotEnv.load(file);
+
+            assertEquals(before, System.getProperty(key));
+        } finally {
             Files.deleteIfExists(file);
         }
     }
