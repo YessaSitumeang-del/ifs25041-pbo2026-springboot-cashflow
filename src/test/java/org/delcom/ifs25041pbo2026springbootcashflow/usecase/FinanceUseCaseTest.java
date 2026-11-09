@@ -233,6 +233,24 @@ class FinanceUseCaseTest {
     }
 
     @Test
+    void deleteFailsWhenRepositoryCannotRemoveFoundEntity() throws Exception {
+        // Repository yang menemukan data tetapi gagal menghapusnya (mis. dihapus sesi lain).
+        TransactionRepository stubborn = new TransactionRepository() {
+            @Override
+            public synchronized boolean deleteById(Integer id) {
+                return false;
+            }
+        };
+        FinanceUseCase stubbornUseCase = new FinanceUseCase(stubborn);
+        stubbornUseCase.addIncome("Gaji", "1000");
+
+        EntityNotFoundException ex = assertThrows(EntityNotFoundException.class,
+                () -> stubbornUseCase.delete(1));
+        assertEquals("Transaksi dengan ID 1 tidak ditemukan.", ex.getMessage());
+        assertEquals(1, stubbornUseCase.getTransactionCount());
+    }
+
+    @Test
     void deleteRejectsInvalidIds() throws Exception {
         seed();
 
