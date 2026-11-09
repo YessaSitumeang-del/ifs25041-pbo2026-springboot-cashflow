@@ -22,6 +22,13 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <vaadin.version>24.8.0</vaadin.version>
         <jacoco.version>0.8.14</jacoco.version>
+
+        <!-- Override versi transitif untuk menutup temuan Trivy.
+             Verifikasi tiap versi di Maven Central sebelum dipakai. -->
+        <tomcat.version>10.1.59</tomcat.version>
+        <netty.version>4.1.137.Final</netty.version>
+        <jackson-bom.version>2.21.7</jackson-bom.version>
+        <spring-framework.version>6.2.20</spring-framework.version>
     </properties>
 
     <dependencyManagement>
@@ -32,6 +39,18 @@
                 <version>${vaadin.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+
+            <!-- Library yang tidak dikelola Spring Boot, dipaksa naik versinya -->
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>33.7.2-jre</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jsoup</groupId>
+                <artifactId>jsoup</artifactId>
+                <version>1.23.2</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
